@@ -1,12 +1,12 @@
 {
-  "stdin_port": 39094, 
-  "ip": "127.0.0.1", 
-  "control_port": 40681, 
-  "hb_port": 58752, 
-  "signature_scheme": "hmac-sha256", 
-  "key": "ff82e83d-8b62-418b-9f67-9694540ab041", 
-  "kernel_name": "python2", 
-  "shell_port": 33825, 
-  "transport": "tcp", 
-  "iopub_port": 46292
+  "iopub_port": 47980,
+  "signature_scheme": "hmac-sha256",
+  "transport": "tcp",
+  "kernel_name": "",
+  "hb_port": 60291,
+  "control_port": 59377,
+  "ip": "127.0.0.1",
+  "stdin_port": 43593,
+  "key": "cf829e9a-2edf-4222-a7fb-beca178dc691",
+  "shell_port": 35734
 }

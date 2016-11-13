@@ -12,6 +12,7 @@ class Workspace(models.Model):
 #A cell is an ipython notebook code cell with python code inside.
 class Cell(models.Model):
     workspace_id = models.ForeignKey(Workspace)
+    user_id = models.ForeignKey(User) #the original author of the cell.
     code = models.TextField() #the code snippet inside of the cell.
     created = models.DateTimeField(auto_now_add=True)
     

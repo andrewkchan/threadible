@@ -1,38 +1,30 @@
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
 from .api import *
-
-@csrf_exempt
-def eval_(request):
-    if request.method == "POST" and 'inposT' in request.POST:
-        return HttpResponse(str(eval(request.POST['inposT'])))
-    return HttpResponse("This api page takes a POST with 'inposT'. {}".format(request))
 
 @csrf_exempt
 def create_workspace(request):
     if request.method == "POST" and 'name' in request.POST:
-        Workspace(request.POST['name'])
-        return HttpResponse("Created new workspace " + request.POST['name'] + ".")
-    return HttpResponse("This api page takes a POST with 'name'. {}".format(request))
-
-@csrf_exempt
-def create_cell(request):
-    if request.method == "POST" and 'workspace_id' in request.POST:
-        cell = Cell(request.POST['workspace_id'])
-        return HttpResponse(cell.cell_id)
-    return HttpResponse("This api page takes a POST with 'workspace_id', 'code'. {}".format(request))
+        return JsonResponse({'workspace_id' : Workspace(request.POST['name']).workspace_id})
+    return HttpResponseBadRequest("This api page takes a POST with 'name'.")
 
 @csrf_exempt
 def edit_cell(request):
-    if request.method == "POST" and 'cell_id' in request.POST and 'code' in request.POST:
-        edit_cell_content(request.POST['cell_id'], request.POST['code'])
-        return HttpResponse("Edited cell " + request.POST['cell_id'] + ".")
-    return HttpResponse("This api page takes a POST with 'cell_id', 'code'. {}".format(request))
-
-def eval_cell(request):
-    if request.method == "GET" and 'cell_id' in request.GET:
-        return HttpResponse(str(eval(request.GET['name'])))
-    return HttpResponse("This api page takes a GET with 'cell_id'. {}".format(request))
+    '''
+    @param request - A JSON of the form {workspace_id:(INT), cell_id:(INT), code:(TEXT)}
+    
+    Updates the corresponding cell's contents in the DB, creating a new entry if
+    the cell does not already exist in the DB (indicated by cell_id=-1).
+    In the HTTP response, returns a JSON of the form
+    {cell_id:(INT), output:(OUTPUT_JSON)}, with OUTPUT_JSON specified by:
+    
+    output == {type:(STRING, "terminal" if terminal output, "image" if graphical output), data:(STRING, stdout or the image URL)}
+    
+    The output is determined by the execution of the new cell code.
+    '''
+    return HttpResponse(request.method + " " + request.POST['workspace_id'])
+    if request.method == "POST" and 'workspace_id' in request.POST and 'cell_id' in request.POST and 'code' in request.POST:
+        return edit_cell_content(request.POST['workspace_id'], request.POST['cell_id'], request.POST['code'])
+    return HttpResponseBadRequest("This api page takes a POST with 'workspace_id', cell_id', 'code'.")
